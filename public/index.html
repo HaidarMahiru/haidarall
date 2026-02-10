@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HaidarAll - Multi Tools</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1, h2, h3 { text-align: center; margin-bottom: 10px; }
+        .subtitle { text-align: center; color: #94a3b8; margin-bottom: 30px; font-size: 0.9em; }
+
+        /* Tabs Navigation */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--card);
+            border: 1px solid #334155;
+            color: var(--text);
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* Sections */
+        .section {
+            display: none; /* Hidden by default */
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Forms */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.9em; color: #cbd5e1; }
+        
+        input[type="text"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: white;
+            border-radius: 8px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            background: #0f172a;
+            border: 1px dashed #334155;
+            border-radius: 8px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        button:hover { background-color: var(--accent-hover); }
+        button:disabled { background-color: #475569; cursor: not-allowed; }
+
+        /* Results */
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #0f172a;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            word-wrap: break-word;
+        }
+
+        .hidden { display: none; }
+
+        /* AIO Specific */
+        .download-item {
+            background: #1e293b;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn-dl {
+            background: #10b981;
+            color: white;
+            text-decoration: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 0.8em;
+        }
+
+        img.preview { width: 100%; border-radius: 8px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>HaidarAll Tools</h1>
+    <p class="subtitle">All-in-One Downloader & Utilities (Serverless)</p>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab('aio')">Downloader</button>
+        <button class="tab-btn" onclick="openTab('tools')">Image Tools</button>
+        <button class="tab-btn" onclick="openTab('ai')">AI & Chat</button>
+        <button class="tab-btn" onclick="openTab('ngl')">NGL & Spam</button>
+        <button class="tab-btn" onclick="openTab('islam')">Islam & Mail</button>
+    </div>
+
+    <div id="aio" class="section active">
+        <h3>AIO Downloader</h3>
+        <p style="font-size:0.8em; color:#aaa; text-align:center;">Support: TikTok, IG, FB, YouTube, Twitter</p>
+        <div class="form-group">
+            <input type="text" id="urlInput" placeholder="Tempel Link Video di sini...">
+        </div>
+        <button onclick="downloadVideo()" id="btnDownload">🔍 Cari Video</button>
+        
+        <div id="resultAio" class="result-box hidden"></div>
+    </div>
+
+    <div id="tools" class="section">
+        <h3>Image Tools</h3>
+        <div class="form-group">
+            <label>Pilih Tool:</label>
+            <select id="toolType">
+                <option value="removebg">Hapus Background</option>
+                <option value="upscale">HD Upscale</option>
+                <option value="dewatermark">Hapus Watermark</option>
+                <option value="remini">Remini (Wajah)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Upload Gambar (Wajib Image):</label>
+            <input type="file" id="imageInput" accept="image/png, image/jpeg, image/jpg, image/webp">
+        </div>
+        <button onclick="processImage()" id="btnImage">🚀 Proses Gambar</button>
+        
+        <div id="resultImage" class="result-box hidden">
+            <p>Hasil:</p>
+            <img id="imgOutput" src="" class="preview">
+            <a id="linkDownloadImg" href="#" class="btn-dl" download="result.jpg" style="display:block; text-align:center; margin-top:10px;">Download Hasil</a>
+        </div>
+    </div>
+
+    <div id="ai" class="section">
+        <h3>AI Generator & Chat</h3>
+        
+        <div class="form-group">
+            <label>SimiSimi Chat:</label>
+            <input type="text" id="simiInput" placeholder="Ajak ngobrol Simi...">
+            <button onclick="chatSimi()" style="margin-top:5px;">Kirim</button>
+            <p id="simiResult" style="color:#fbbf24; margin-top:5px; font-style:italic;"></p>
+        </div>
+        <hr style="border-color:#334155">
+        <div class="form-group">
+            <label>AI Music (Suno):</label>
+            <input type="text" id="musicPrompt" placeholder="Contoh: Lagu pop tentang kopi pagi">
+            <button onclick="makeMusic()" style="margin-top:5px;">Buat Musik</button>
+            <div id="musicResult" class="hidden" style="margin-top:10px;"></div>
+        </div>
+    </div>
+
+    <div id="ngl" class="section">
+        <h3>NGL Spammer</h3>
+        <div class="form-group">
+            <label>Link NGL Lengkap:</label>
+            <input type="text" id="nglLink" placeholder="https://ngl.link/namakamu">
+        </div>
+        <div class="form-group">
+            <label>Pesan:</label>
+            <input type="text" id="nglMsg" placeholder="Isi pesan spam...">
+        </div>
+        <div class="form-group">
+            <label>Jumlah:</label>
+            <input type="number" id="nglAmount" value="5" min="1" max="100">
+        </div>
+        <button onclick="spamNgl()" id="btnNgl">💣 Mulai Spam</button>
+        <p id="nglResult" style="text-align:center; margin-top:10px;"></p>
+    </div>
+
+    <div id="islam" class="section">
+        <h3>Islam & Utilities</h3>
+        
+        <div class="form-group">
+            <label>Al-Quran:</label>
+            <button onclick="loadSurah()">Buka Daftar Surah</button>
+            <div id="quranResult" style="max-height:200px; overflow-y:auto; margin-top:10px;" class="hidden"></div>
+        </div>
+
+        <hr style="border-color:#334155">
+        
+        <div class="form-group">
+            <label>Temp Mail:</label>
+            <button onclick="createMail()">Buat Email Baru</button>
+            <input type="text" id="tempEmailAddr" readonly style="margin-top:5px; cursor:pointer;" onclick="this.select()">
+            <button onclick="checkInbox()" style="margin-top:5px; background:#64748b;">Cek Inbox</button>
+            <div id="inboxResult" style="margin-top:10px;"></div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- UTILS ---
+    function openTab(id) {
+        document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    function setLoading(btnId, isLoading, text = "Proses...") {
+        const btn = document.getElementById(btnId);
+        if (isLoading) {
+            btn.dataset.originalText = btn.innerText;
+            btn.innerText = text;
+            btn.disabled = true;
+        } else {
+            btn.innerText = btn.dataset.originalText;
+            btn.disabled = false;
+        }
+    }
+
+    // --- 1. AIO DOWNLOADER ---
+    async function downloadVideo() {
+        const url = document.getElementById('urlInput').value;
+        if (!url) return alert("Masukkan URL dulu!");
+        
+        setLoading('btnDownload', true, "Sedang Mencari...");
+        const resultDiv = document.getElementById('resultAio');
+        resultDiv.classList.add('hidden');
+
+        try {
+            const res = await fetch('/api/download', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+            });
+            const data = await res.json();
+
+            if (!data.status && data.message) throw new Error(data.message);
+            if (!data.downloads) throw new Error("Video tidak ditemukan.");
+
+            // Render HTML
+            let html = `
+                <h4 style="margin:0 0 10px 0;">${data.title}</h4>
+                <img src="${data.thumbnail}" class="preview">
+                <p style="font-size:0.8em; color:#aaa;">Source: ${data.platform}</p>
+            `;
+
+            data.downloads.forEach(item => {
+                // Generate Stream Link dengan Nama File yang Benar
+                // Backend sudah mengirimkan 'filename' (contoh: judul.mp3)
+                const streamUrl = `/api/stream?url=${encodeURIComponent(item.url)}&name=${encodeURIComponent(item.filename)}`;
+                
+                html += `
+                    <div class="download-item">
+                        <div>
+                            <strong>${item.label}</strong><br>
+                            <small>${item.size}</small>
+                        </div>
+                        <a href="${streamUrl}" target="_blank" class="btn-dl">Download</a>
+                    </div>
+                `;
+            });
+
+            resultDiv.innerHTML = html;
+            resultDiv.classList.remove('hidden');
+
+        } catch (error) {
+            alert("Error: " + error.message);
+        } finally {
+            setLoading('btnDownload', false);
+        }
+    }
+
+    // --- 2. IMAGE TOOLS (STRICT IMAGE) ---
+    async function processImage() {
+        const fileInput = document.getElementById('imageInput');
+        if (fileInput.files.length === 0) return alert("Pilih gambar dulu!");
+        
+        const type = document.getElementById('toolType').value;
+        const formData = new FormData();
+        formData.append('image', fileInput.files[0]);
+        formData.append('type', type);
+
+        setLoading('btnImage', true, "Mengupload & Memproses...");
+        document.getElementById('resultImage').classList.add('hidden');
+
+        try {
+            const res = await fetch('/api/tools/image', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            
+            if (data.success) {
+                document.getElementById('imgOutput').src = data.image;
+                document.getElementById('linkDownloadImg').href = data.image;
+                document.getElementById('resultImage').classList.remove('hidden');
+            } else {
+                alert("Gagal: " + (data.message || "Server Error"));
+            }
+        } catch (e) {
+            alert("Terjadi kesalahan koneksi.");
+        } finally {
+            setLoading('btnImage', false);
+        }
+    }
+
+    // --- 3. SIMISIMI & MUSIC ---
+    async function chatSimi() {
+        const text = document.getElementById('simiInput').value;
+        if(!text) return;
+        const res = await fetch('/api/simi', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({text})
+        });
+        const d = await res.json();
+        document.getElementById('simiResult').innerText = "Simi: " + d.reply;
+    }
+
+    async function makeMusic() {
+        const prompt = document.getElementById('musicPrompt').value;
+        if(!prompt) return alert("Isi prompt musik!");
+        alert("Proses musik memakan waktu lama (bisa 1-2 menit). Mohon tunggu...");
+        
+        try {
+            const res = await fetch('/api/music', {
+                method: 'POST', headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({prompt})
+            });
+            const d = await res.json();
+            if(d.success) {
+                document.getElementById('musicResult').innerHTML = `
+                    <p>Judul: ${d.result.title}</p>
+                    <audio controls src="${d.result.audio_url}"></audio>
+                `;
+                document.getElementById('musicResult').classList.remove('hidden');
+            } else { alert("Gagal membuat musik"); }
+        } catch(e) { alert("Timeout / Error"); }
+    }
+
+    // --- 4. NGL SPAM ---
+    async function spamNgl() {
+        const url = document.getElementById('nglLink').value;
+        const message = document.getElementById('nglMsg').value;
+        const amount = document.getElementById('nglAmount').value;
+
+        if(!url.includes('ngl.link')) return alert("Link harus format https://ngl.link/...");
+
+        setLoading('btnNgl', true, "Spamming...");
+        try {
+            const res = await fetch('/api/tools/ngl', {
+                method:'POST', headers:{'Content-Type':'application/json'},
+                body: JSON.stringify({url, message, amount})
+            });
+            const d = await res.json();
+            document.getElementById('nglResult').innerText = d.status ? "Sukses Spam!" : "Gagal Spam";
+        } catch(e) { alert("Error"); }
+        setLoading('btnNgl', false);
+    }
+
+    // --- 5. MAIL & QURAN (Simple Implementation) ---
+    async function createMail() {
+        const res = await fetch('/api/tempmail/create');
+        const d = await res.json();
+        if(d.email) {
+            document.getElementById('tempEmailAddr').value = d.email;
+            localStorage.setItem('temp_mail', d.email);
+            alert("Email dibuat! Klik 'Cek Inbox' nanti.");
+        }
+    }
+
+    async function checkInbox() {
+        const email = document.getElementById('tempEmailAddr').value;
+        if(!email) return alert("Buat email dulu!");
+        const res = await fetch(`/api/tempmail/inbox/${email}`);
+        const msgs = await res.json();
+        const div = document.getElementById('inboxResult');
+        div.innerHTML = msgs.length ? msgs.map(m => `<div style="background:#334155; padding:5px; margin-top:5px; font-size:0.8em;"><b>${m.from}</b>: ${m.subject}</div>`).join('') : "Belum ada pesan masuk.";
+    }
+
+    async function loadSurah() {
+        const res = await fetch('/api/quran/list');
+        const list = await res.json();
+        const div = document.getElementById('quranResult');
+        div.classList.remove('hidden');
+        div.innerHTML = list.map(s => `<div style="padding:5px; border-bottom:1px solid #333;">${s.name}</div>`).join('');
+    }
+
+</script>
+
+</body>
+</html>
